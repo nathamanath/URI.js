@@ -1,0 +1,22 @@
+digraph {
+  rankdir=LR;
+  graph[center=true margin=2 nodesep=2 ranksep=2]
+  node [shape=circle fontsize=10 fixedsize=false width=0.9 fontname="Helvetica" fontcolor="#525252" color="#777777"];
+  edge [fontsize=10 fontname="Helvetica" fontcolor="#525252" color="#777777"];
+
+  "parse param pair" -> "key type"
+
+  "key type" -> "parse array" [label="type is array"]
+  "key type" -> "parse hash" [label="type is hash"]
+  "key type" -> "parse variable" [label="type is variable"]
+
+  "parse array" -> "create key" [label="key dosent exist"]
+  "parse hash" -> "create key" [label="key dosent exist"]
+  "parse variable" -> "create key" [label="key dosent exist"]
+
+  "create key" -> "parse value"
+
+  "parse value" -> "parse param pair" [label="value is key"]
+  "parse value" -> "key = value" [label="value is value"]
+}
+

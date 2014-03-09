@@ -17,13 +17,11 @@ module.exports = (grunt)->
       options:
         'no_trailing_whitespace':
           level: 'error'
-    docco:
-      options:
-        layout: 'parallel'
-        output: 'docs/'
-        single:
-          files:
-            src: ['source/uri_spec.coffee']
+    jsdoc:
+      dist:
+        src: ['build/uri.js', 'README.md']
+        options:
+          output: 'docs'
     watch:
       scripts:
         files: ['source/uri.coffee'],
@@ -41,12 +39,12 @@ module.exports = (grunt)->
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-coffeelint')
-  grunt.loadNpmTasks('grunt-docco-multi')
+  grunt.loadNpmTasks('grunt-jsdoc')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-exec')
   grunt.loadNpmTasks('grunt-contrib-uglify')
 
   grunt.registerTask('test', ['coffeelint:tests', 'coffee:test', 'exec:test'])
   grunt.registerTask('default', ['coffeelint:app', 'coffee:compile'])
-  grunt.registerTask('dist', ['test', 'default', 'uglify', 'docco'])
+  grunt.registerTask('dist', ['test', 'default', 'uglify', 'jsdoc'])
 
