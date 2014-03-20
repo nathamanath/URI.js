@@ -17,11 +17,6 @@ module.exports = (grunt)->
       options:
         'no_trailing_whitespace':
           level: 'error'
-    jsdoc:
-      dist:
-        src: ['build/uri.js', 'README.md']
-        options:
-          output: 'docs'
     watch:
       scripts:
         files: ['source/uri.coffee'],
@@ -39,12 +34,11 @@ module.exports = (grunt)->
 
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-coffeelint')
-  grunt.loadNpmTasks('grunt-jsdoc')
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-exec')
   grunt.loadNpmTasks('grunt-contrib-uglify')
 
   grunt.registerTask('test', ['coffeelint:tests', 'coffee:test', 'exec:test'])
   grunt.registerTask('default', ['coffeelint:app', 'coffee:compile'])
-  grunt.registerTask('dist', ['test', 'default', 'uglify', 'jsdoc'])
+  grunt.registerTask('dist', ['test', 'default', 'uglify'])
 
