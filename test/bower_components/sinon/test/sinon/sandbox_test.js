@@ -147,7 +147,7 @@ if (typeof require == "function" && typeof module == "object") {
                     assert(sinon.fakeServer.isPrototypeOf(server));
                 },
 
-                "creates server with cock": function () {
+                "creates server with clock": function () {
                     this.sandbox.serverPrototype = sinon.fakeServerWithClock;
                     var server = this.sandbox.useFakeServer();
 
