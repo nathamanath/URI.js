@@ -29,7 +29,7 @@
       /**
        * Parses uri string to uri object
        * @memberOf URI
-       * @param {string} uri - A uri string.
+       * @Param {string} uri - A uri string.
        */
 
       URI.parse = function(href) {
