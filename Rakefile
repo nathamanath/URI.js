@@ -12,7 +12,7 @@ TEST_DIR = File.expand_path('../spec', __FILE__)
 task default: :js
 
 # Task js depends on all of js_files being up to date
-task js: [:lint, :minify]
+task js: [:lint, :'jasmine:ci', :minify]
 
 desc 'Watch source for changes'
 task :watch do
