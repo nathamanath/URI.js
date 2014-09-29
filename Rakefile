@@ -47,7 +47,7 @@ task :minify do
   js = File.read(SOURCE_FILE)
   ugly = Uglifier.compile(js)
 
-  File.open("time_ago.min.js", 'w') do |file|
+  File.open("#{File.basename(SOURCE_FILE, '.js')}.min.js", 'w') do |file|
     file.puts ugly
   end
 
