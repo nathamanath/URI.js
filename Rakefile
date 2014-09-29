@@ -12,7 +12,7 @@ TEST_DIR = File.expand_path('../spec', __FILE__)
 task default: :js
 
 # Task js depends on all of js_files being up to date
-task js: [:lint, :'jasmine:ci', :minify]
+task js: [:lint, :test, :minify]
 
 desc 'Watch source for changes'
 task :watch do
@@ -33,9 +33,7 @@ task :watch do
 end
 
 desc 'Test js'
-task :test do
-  sh 'mocha-phantomjs -R dot test/index.html'
-end
+task test: :'jasmine:ci'
 
 desc 'Lint js'
 task lint: :jshint
@@ -78,7 +76,7 @@ Jshintrb::JshintTask.new :jshint do |t|
     unused: true,
     maxparams: 4,
     maxdepth: 3,
-    maxstatements: 10,
+    # maxstatements: 10,
     maxlen: 80
   }
 end
