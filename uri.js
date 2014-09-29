@@ -31,7 +31,7 @@
       this.protocol = a.protocol || null;
       this.subdomain = a.subdomain || null;
       this.host = a.hostname || null;
-      this.port = a.port && (a.port * 1) !== 0 ? a.port : null;
+      this.port = a.port && (a.port * 1) !== 0 ? a.port*1 : null;
       this.path = a.pathname !== '/' ? pathnameToPath(a.pathname) : [];
       this.params = a.search ? parseParams(a.search) : {};
       this.hash = a.hash.substring(1) || null;
@@ -75,9 +75,12 @@
         throw new Error('URI.stringify requires valid uri object.');
       }
 
-      out = uri.protocol + '//' + uri.host + '/';
+      out = uri.protocol + '//' + uri.host;
 
-      if(port){ out += port; }
+      if(port){ out += ':' + port; }
+
+      out += '/';
+
       if(path){ out += path.join('/'); }
 
       if (!emptyObject(uri.params)) {

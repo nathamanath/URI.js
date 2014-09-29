@@ -127,7 +127,7 @@
       });
 
       it('parses uri port', function(){
-        expect(URI.parse('http://nathansplace.co.uk:1234').port).toEqual('1234');
+        expect(URI.parse('http://nathansplace.co.uk:1234').port).toEqual(1234);
       });
     });
   });
@@ -191,6 +191,13 @@
 
     it('parses mix of params', function(){
       var url = BASE_URI + '?a[][a]=true&a[]=2&o[a][]=1&o[a][]=2&o[a][]=3',
+          uri = URI.parse(url);
+
+      expect(URI.stringify(uri)).toEqual(url);
+    });
+
+    it('parses port', function(){
+      var url = 'http://asdasd.asd:2222/',
           uri = URI.parse(url);
 
       expect(URI.stringify(uri)).toEqual(url);
