@@ -1,6 +1,6 @@
 (function() {
+  'use strict';
   (function(window) {
-    "use strict";
 
     /**
      * @fileoverview URI
@@ -11,18 +11,31 @@
     /**
      * @class URI
      */
-    return window.URI = (function() {
-      var castValue, deepMerge, emptyObject, hasNestedKeys, keyValueAsJs, nestedKeysAsArray, nestedKeysAsJs, parseParams, toString, validUriObject, valueType;
+      var castValue,
+          deepMerge,
+          emptyObject,
+          hasNestedKeys,
+          keyValueAsJs,
+          nestedKeysAsArray,
+          nestedKeysAsJs,
+          parseParams,
+          toString,
+          validUriObject,
+          valueType;
+
+      var pathnameToPath = function(pathname){
+        return pathname.substring(1).split('/');
+      };
 
       function URI(a) {
         this.protocol = a.protocol || null;
         this.subdomain = a.subdomain || null;
         this.host = a.hostname || null;
         this.port = a.port && (a.port * 1) !== 0 ? a.port : null;
-        this.path = a.pathname !== '/' ? a.pathname.substring(1).split('/') : [];
+        this.path = a.pathname !== '/' ? pathnameToPath(a.pathname) : [];
         this.params = a.search ? parseParams(a.search) : {};
         this.hash = a.hash.substring(1) || null;
-        this;
+        return this;
       }
 
 
@@ -34,7 +47,7 @@
 
       URI.parse = function(href) {
         var a;
-        if (href == null) {
+        if (typeof href === 'undefined') {
           href = window.location.href;
         }
         if (!(href.match(/^(ftp|http|https|file):\/\/[^ "]+$/))) {
@@ -42,7 +55,7 @@
         }
         a = document.createElement('a');
         a.href = href;
-        return new this(a);
+        return new URI(a);
       };
 
 
@@ -53,29 +66,34 @@
        */
 
       URI.stringify = function(uri) {
-        var hash, k, out, output, path, port, v, _ref;
-        if (!validUriObject(uri)) {
+        var out,
+            hash = uri.hash,
+            port = uri.port,
+            path = uri.path;
+
+        if(!validUriObject(uri)){
           throw new Error('URI.stringify requires valid uri object.');
         }
-        out = "" + uri.protocol + "//" + uri.host + "/";
-        if (port = uri.port) {
-          out += port;
-        }
-        if (path = uri.path) {
-          out += path.join('/');
-        }
+
+        out = uri.protocol + '//' + uri.host + '/';
+
+        if(port){ out += port; }
+        if(path){ out += path.join('/'); }
+
         if (!emptyObject(uri.params)) {
-          output = [];
+          var output = [],
           _ref = uri.params;
-          for (k in _ref) {
-            v = _ref[k];
-            output.push(toString(k, v));
+          for(var k in _ref) {
+            if(_ref.hasOwnProperty(k)){
+              var v = _ref[k];
+              output.push(toString(k, v));
+            }
           }
-          out += "?" + (output.join('&'));
+          out += '?' + (output.join('&'));
         }
-        if (hash = uri.hash) {
-          out += "#" + hash;
-        }
+
+        if(hash){ out += '#' + hash; }
+
         return out;
       };
 
@@ -83,7 +101,7 @@
         var key, keys, valid, _i, _len;
         keys = ['protocol', 'port', 'path', 'params', 'hash'];
         valid = true;
-        for (_i = 0, _len = keys.length; _i < _len; _i++) {
+        for(_i = 0, _len = keys.length; _i < _len; _i++) {
           key = keys[_i];
           if (!uri.hasOwnProperty(key)) {
             valid = false;
@@ -93,20 +111,22 @@
       };
 
       toString = function(key, value) {
-        var k, out, v, _i, _len;
+        var out, v, _i, _len;
         out = [];
         if (value instanceof Array) {
           for (_i = 0, _len = value.length; _i < _len; _i++) {
             v = value[_i];
-            out.push(toString("" + key + "[]", v));
+            out.push(toString(key + '[]', v));
           }
         } else if (typeof value === 'object') {
-          for (k in value) {
-            v = value[k];
-            out.push(toString("" + key + "[" + k + "]", v));
+          for(var k in value){
+            if(value.hasOwnProperty(k)){
+              v = value[k];
+              out.push(toString(key + '[' + k + ']', v));
+            }
           }
         } else {
-          return "" + key + "=" + value;
+          return key + '=' + value;
         }
         return out.join('&');
       };
@@ -117,14 +137,16 @@
 
       deepMerge = function(destination, object) {
         var k, v;
-        for (k in object) {
-          v = object[k];
-          if (destination[k] instanceof Array && v instanceof Array) {
-            destination[k] = destination[k].concat(v);
-          } else if (typeof destination[k] === 'object' && typeof v === 'object') {
-            destination[k] = deepMerge(destination[k], v);
-          } else {
-            destination[k] = v;
+        for(k in object){
+          if(object.hasOwnProperty(k)){
+            v = object[k];
+            if (destination[k] instanceof Array && v instanceof Array) {
+              destination[k] = destination[k].concat(v);
+            } else if (typeof destination[k] === 'object' && typeof v === 'object') {
+              destination[k] = deepMerge(destination[k], v);
+            } else {
+              destination[k] = v;
+            }
           }
         }
         return destination;
@@ -142,12 +164,12 @@
 
       castValue = function(value) {
         switch (valueType(value)) {
-          case 'bool':
-            return !!value;
-          case 'num':
-            return parseFloat(value);
-          default:
-            return value;
+        case 'bool':
+          return !!value;
+        case 'num':
+          return parseFloat(value);
+        default:
+          return value;
         }
       };
 
@@ -160,7 +182,8 @@
         keys = [];
         splitKeys = key.match(/([a-zA-Z0-9]+)(\[[0-9a-zA-z]*\])/);
         keys.push(splitKeys[1]);
-        return keys = keys.concat(splitKeys[2].match(/\[([a-zA-Z0-9]*)\]/g));
+        keys = keys.concat(splitKeys[2].match(/\[([a-zA-Z0-9]*)\]/g));
+        return keys;
       };
 
       nestedKeysAsJs = function(keys, value) {
@@ -203,9 +226,7 @@
         return output;
       };
 
-      return URI;
-
-    })();
+    window.URI = URI;
   })(window);
-
 }).call(this);
+

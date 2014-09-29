@@ -1,1 +1,1 @@
-../build/uri.js
+../uri.js

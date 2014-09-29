@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'listen'
-gem 'coffee-script'
-gem 'coffeelint'
 gem 'uglifier'
+gem 'jshintrb'
+gem 'jasmine'
 
