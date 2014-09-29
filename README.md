@@ -37,5 +37,5 @@ URI.stringify(uri);
 * seperate parse and stringify objects out from uri
 
 ### Testing
-Run `grunt test`. Requires phantomjs.
+Run `rake test`.
 
