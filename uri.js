@@ -24,7 +24,7 @@
         valueType;
 
     var pathnameToPath = function(pathname){
-      return pathname.substring(1).split('/');
+      return pathname.replace(/(^\/)/, '').split('/');
     };
 
     function URI(a) {
@@ -135,7 +135,11 @@
     };
 
     emptyObject = function(object) {
-      return Object.getOwnPropertyNames(object).length === 0;
+      for(var i in object){
+        if(object.hasOwnProperty(i)){ return false; }
+      }
+
+      return true;
     };
 
     deepMerge = function(destination, object) {

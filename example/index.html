@@ -1,10 +1,14 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
     <script src="./uri.js"></script>
     <script>
-      uri = URI.parse('http://nathansplace.co.uk/path?string=string')
-      console.dir(uri);
-      console.log(URI.stringify(uri));
+      uri = URI.parse('http://nathansplace.co.uk/path/bla/bla?string=string')
+      document.write(JSON.stringify(uri));
+      document.write('<br><br>');
+      document.write(URI.stringify(uri));
     </script>
   </head>
 
