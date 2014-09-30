@@ -24,17 +24,22 @@
         valueType;
 
     var pathnameToPath = function(pathname){
+      // remove possible leading slash via replace
+      // rather than substr for ie8 compatibility
       return pathname.replace(/(^\/)/, '').split('/');
     };
 
     function URI(a) {
+      var portAsI = a.port * 1;
+
       this.protocol = a.protocol || null;
       this.subdomain = a.subdomain || null;
       this.host = a.hostname || null;
-      this.port = a.port && (a.port * 1) !== 0 ? a.port*1 : null;
+      this.port = !!portAsI ? portAsI : null;
       this.path = a.pathname !== '/' ? pathnameToPath(a.pathname) : [];
       this.params = a.search ? parseParams(a.search) : {};
       this.hash = a.hash.substring(1) || null;
+
       return this;
     }
 
@@ -46,15 +51,15 @@
      */
 
     URI.parse = function(href) {
-      var a;
-      if (typeof href === 'undefined') {
-        href = window.location.href;
-      }
+      if (typeof href === 'undefined') { href = window.location.href; }
+
       if (!(href.match(/^(ftp|http|https|file):\/\/[^ "]+$/))) {
         throw new Error('URI.parse requires a valid uri.');
       }
-      a = document.createElement('a');
+
+      var a = document.createElement('a');
       a.href = href;
+
       return new URI(a);
     };
 
@@ -85,13 +90,15 @@
 
       if (!emptyObject(uri.params)) {
         var output = [],
-        _ref = uri.params;
-        for(var k in _ref) {
-          if(_ref.hasOwnProperty(k)){
-            var v = _ref[k];
+            params = uri.params;
+
+        for(var k in params) {
+          if(params.hasOwnProperty(k)){
+            var v = params[k];
             output.push(toString(k, v));
           }
         }
+
         out += '?' + (output.join('&'));
       }
 
@@ -101,24 +108,26 @@
     };
 
     validUriObject = function(uri) {
-      var key, keys, valid, _i, _len;
-      keys = ['protocol', 'port', 'path', 'params', 'hash'];
-      valid = true;
-      for(_i = 0, _len = keys.length; _i < _len; _i++) {
-        key = keys[_i];
+      var key,
+          keys = ['protocol', 'port', 'path', 'params', 'hash'],
+          valid = true;
+
+      for(var i = 0, length = keys.length; i < length; i++) {
+        key = keys[i];
         if (!uri.hasOwnProperty(key)) {
           valid = false;
         }
       }
+
       return valid;
     };
 
     toString = function(key, value) {
-      var out, v, _i, _len;
-      out = [];
+      var v, out = [];
+
       if (value instanceof Array) {
-        for (_i = 0, _len = value.length; _i < _len; _i++) {
-          v = value[_i];
+        for (var i = 0, len = value.length; i < len; i++) {
+          v = value[i];
           out.push(toString(key + '[]', v));
         }
       } else if (typeof value === 'object') {
@@ -157,6 +166,7 @@
           }
         }
       }
+
       return destination;
     };
 
@@ -186,18 +196,20 @@
     };
 
     nestedKeysAsArray = function(key) {
-      var keys, splitKeys;
-      keys = [];
+      var keys = [],
       splitKeys = key.match(/([a-zA-Z0-9]+)(\[[0-9a-zA-z]*\])/);
+
       keys.push(splitKeys[1]);
       keys = keys.concat(splitKeys[2].match(/\[([a-zA-Z0-9]*)\]/g));
+
       return keys;
     };
 
     nestedKeysAsJs = function(keys, value) {
-      var key, out, _i;
-      for (_i = keys.length - 1; _i >= 0; _i += -1) {
-        key = keys[_i];
+      var key, out;
+
+      for (var i = keys.length - 1; i >= 0; i += -1) {
+        key = keys[i];
         if (key === '[]') {
           out = [value];
         } else {
@@ -206,6 +218,7 @@
         }
         value = out;
       }
+
       return value;
     };
 
@@ -217,11 +230,12 @@
     };
 
     parseParams = function(search) {
-      var keys, output, pair, param, params, value, _i, _len;
+      var keys, output, pair, param, params, value;
       params = search.split('&');
       output = {};
-      for (_i = 0, _len = params.length; _i < _len; _i++) {
-        param = params[_i];
+
+      for (var i = 0, len = params.length; i < len; i++) {
+        param = params[i];
         pair = param.replace('?', '').split('=');
         if (hasNestedKeys(pair[0])) {
           keys = nestedKeysAsArray(pair[0]);
@@ -231,10 +245,12 @@
         }
         output = deepMerge(output, value);
       }
+
       return output;
     };
 
     window.URI = URI;
+
   })(window);
 }).call(this);
 
