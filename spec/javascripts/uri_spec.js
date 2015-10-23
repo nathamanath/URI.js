@@ -51,6 +51,14 @@
         }));
       });
 
+      it('parses params with ampersands in values', function() {
+        expect(URI.parse(BASE_URI + '?category=big&tall')).toEqual(uriObject({
+          params: {
+            category: 'big&tall'
+          }
+        }));
+      });
+
       it('parses hash params', function(){
         expect(URI.parse(BASE_URI + '?o[a]=bla&o[b]=true')).toEqual(uriObject({
           params: {

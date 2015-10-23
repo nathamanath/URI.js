@@ -231,7 +231,7 @@
 
     parseParams = function(search) {
       var keys, output, pair, param, params, value;
-      params = search.split('&');
+      params = search.split(/[&](?=[^&]+=)/);
       output = {};
 
       for (var i = 0, len = params.length; i < len; i++) {
