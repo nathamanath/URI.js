@@ -183,7 +183,7 @@
     castValue = function(value) {
       switch (valueType(value)) {
       case 'bool':
-        return !!value;
+        return JSON.parse(value);
       case 'num':
         return parseFloat(value);
       default:
