@@ -197,7 +197,7 @@
 
     nestedKeysAsArray = function(key) {
       var keys = [],
-      splitKeys = key.match(/([a-zA-Z0-9]+)(\[[0-9a-zA-z_-]*\])/);
+      splitKeys = key.match(/([a-zA-Z0-9_-]+)(\[[0-9a-zA-z_-]*\])/);
 
       keys.push(splitKeys[1]);
       keys = keys.concat(splitKeys[2].match(/\[([a-zA-Z0-9_-]*)\]/g));
