@@ -60,10 +60,10 @@
       });
 
       it('parses hash params', function(){
-        expect(URI.parse(BASE_URI + '?o[a]=bla&o[b]=true')).toEqual(uriObject({
+        expect(URI.parse(BASE_URI + '?o[a_a-a]=bla&o[b]=true')).toEqual(uriObject({
           params: {
             o: {
-              a: 'bla', b: true
+              'a_a-a': 'bla', b: true
             }
           }
         }));
