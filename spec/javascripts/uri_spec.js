@@ -89,6 +89,12 @@
             bool: true
           }
         }));
+
+        expect(URI.parse(BASE_URI + '?bool=false')).toEqual(uriObject({
+          params: {
+            bool: false
+          }
+        }));
       });
 
       it('parses int params', function(){
